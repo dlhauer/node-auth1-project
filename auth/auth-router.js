@@ -58,7 +58,12 @@ router.get('/users', (req, res) => {
       message: 'You shall not pass!'
     });
   }
-  
+});
+
+router.get('/restricted/stuff', (req, res) => {
+  res.status(200).json({
+    message: 'Congratulations! You have reached the restricted stuff endpoint.'
+  });
 })
 
 const requiredFields = [

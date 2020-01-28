@@ -1,11 +1,13 @@
 const express = require('express');
 const authRouter = require('../auth/auth-router');
 const dbConnection = require('../data/db-config');
+const restricted = require('../middleware/restricted');
 const session = require('express-session');
 const KnexSessionStore = require('connect-session-knex')(session);
 const server = express();
 
 server.use(express.json());
+
 
 const sessionConfig = {
   name: 'LeDuan',
@@ -27,6 +29,7 @@ const sessionConfig = {
 }
 
 server.use(session(sessionConfig));
+server.use(restricted);
 server.use('/api/auth', authRouter);
 
 module.exports = server;

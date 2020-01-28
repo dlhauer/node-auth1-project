@@ -23,6 +23,7 @@ router.post('/login', validateUser, (req, res) => {
   Users.findBy({ username })
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.loggedIn = true;
         res.status(200).json({
           message: `Welcome, ${user.username}.`
         });
@@ -41,18 +42,17 @@ router.post('/login', validateUser, (req, res) => {
 });
 
 router.get('/users', (req, res) => {
-  const loggedIn = true; //TODO Add cookie/session business.
-  if (loggedIn) {
+  if (req.session && req.session.loggedIn) {
     Users.find()
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        error: 'Failed to get users.'
+      .then(users => {
+        res.status(200).json(users);
       })
-    })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({
+          error: 'Failed to get users.'
+        })
+      })
   } else {
     res.status(401).json({
       message: 'You shall not pass!'

@@ -60,7 +60,26 @@ router.get('/users', (req, res) => {
   }
 });
 
-router.get('/restricted/stuff', (req, res) => {
+router.get('/logout', (req, res) => {
+  if (req.session.loggedIn) {
+    req.session.destroy(err => {
+      if (err) {
+        res.status(500).json({
+          error: 'Error logging out.'
+        })
+      } else {
+        res.status(200).json({
+          message: 'Logout successful, good buddy!'
+        });
+      }
+    });
+  } else {
+    console.log('trying to send 204');
+    res.status(204).end();
+  }
+})
+
+router.get('/restricted/stuff', (req, res) => { //Just for trying out the 'restricted' middleware.
   res.status(200).json({
     message: 'Congratulations! You have reached the restricted stuff endpoint.'
   });
